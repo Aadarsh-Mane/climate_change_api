@@ -1,5 +1,4 @@
 import express from "express";
-
 import axios from "axios";
 import cheerio from "cheerio";
 const newspapers = [
@@ -24,25 +23,49 @@ const newspapers = [
     base: "",
   },
 ];
+
 const articles = [];
-newspapers.forEach((newspaper) => {
-  axios.get(newspaper.address).then((response) => {
-    const html = response.data;
-    const $ = cheerio.load(html);
-    $('a:contains("climate")', html).each(function () {
-      const title = $(this).text();
-      const url = $(this).attr("href");
-      articles.push({
-        title,
-        url: newspaper.base + url,
-        source: newspaper.name,
+let nextArticleId = 1; 
+const userId=uuidv4();
+const fetchArticles = async () => {
+  const articles = [];
+  const articlesi=[]
+
+  for (const newspaper of newspapers) {
+    try {
+      const response = await axios.get(newspaper.address);
+      const html = response.data;
+      const $ = cheerio.load(html);
+     
+      
+      $('a:contains("climate")', html).each(function () {
+        const title = $(this).text();
+        const url = $(this).attr("href");
+        articles.push({
+          id:nextArticleId++,
+          title,
+          url: newspaper.base + url,
+          source: newspaper.name,
+        });
       });
-    });
-  });
-});
-export const allNews = (req, res) => {
-  res.json(articles);
+    } catch (error) {
+      console.error(`Error fetching from ${newspaper.name}:`, error);
+    }
+  }
+
+  return articles;
 };
+
+export const allNews = async (req, res) => {
+  try {
+    const articles = await fetchArticles();
+    res.json(articles);
+  } catch (error) {
+    console.error("Error:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+};
+let specificId=1
 export const getSpecificNews = async (req, res) => {
   const newspaperId = req.params.newspaperId;
   const newspaperAddress = newspapers.filter(
@@ -61,6 +84,7 @@ export const getSpecificNews = async (req, res) => {
         const title = $(this).text();
         const url = $(this).attr("href");
         specificArticles.push({
+          id:specificId++,
           title,
           url: newspaperBase + url,
           source: newspaperId,
