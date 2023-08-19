@@ -26,7 +26,7 @@ const newspapers = [
 
 const articles = [];
 let nextArticleId = 1; 
-const userId=uuidv4();
+;
 const fetchArticles = async () => {
   const articles = [];
   const articlesi=[]

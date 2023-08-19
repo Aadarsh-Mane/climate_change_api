@@ -19,6 +19,7 @@
     "puppeteer": "^21.0.3",
     "request": "^2.88.2",
     "request-promise": "^4.2.6"
+    
   },
   "description": ""
 }
