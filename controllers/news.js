@@ -1,6 +1,7 @@
 import express from "express";
 import axios from "axios";
 import cheerio from "cheerio";
+import { fecthNews } from "../functions/fetchNews.js";
 const newspapers = [
   {
     name: "thetimes",
@@ -59,6 +60,15 @@ const fetchArticles = async () => {
 export const allNews = async (req, res) => {
   try {
     const articles = await fetchArticles();
+    res.json(articles);
+  } catch (error) {
+    console.error("Error:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+};
+export const woolNews = async (req, res) => {
+  try {
+    const articles = await fecthNews();
     res.json(articles);
   } catch (error) {
     console.error("Error:", error);

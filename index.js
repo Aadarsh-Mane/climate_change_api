@@ -1,6 +1,7 @@
 const PORT = process.env.PORT || 5000;
 import userRoutes from "./routes/news.js";
-
+import axios from "axios";
+import cheerio from "cheerio"
 import express from "express";
 const app = express();
 const newspapers = [
@@ -40,3 +41,10 @@ app.use("/news", userRoutes);
 app.listen(PORT, () => {
   console.log(`listening on ${PORT}`);
 });
+//dsdsdsdsdsdcsc
+
+
+// // checking port on local server
+// app.listen(PORT, () => {
+// console.log(`listening on ${PORT}`);
+// });
