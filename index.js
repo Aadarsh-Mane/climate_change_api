@@ -33,9 +33,6 @@ const app = express();
 // ];
 // const articles = [];
 
-// app.get("/", (req, res) => {
-//   res.json("welcome to climate change");
-// });
 
 // app.use("/news", userRoutes);
 // app.listen(PORT, () => {
@@ -44,31 +41,31 @@ const app = express();
 //dsdsdsdsdsdcsc
 const newspapers = [
   {
-      name: 'economictimes',
+    name: 'economictimes',
       address: 'https://football-observatory.com/WeeklyPost425',
       base: ''
   },
   {
-      name: 'fibre2fashion',
-      address: 'https://www.fibre2fashion.com/news/yarn-news',
-      base: ''
+    name: 'fibre2fashion',
+    address: 'https://www.fibre2fashion.com/news/yarn-news',
+    base: ''
   },
   
 ]
 const woolTerms=[
-'wool',
-'yarn'
+  'wool',
+  'yarn'
 ]
 const articles = []
 const duplicatearticles = []
 
 newspapers.forEach(newspaper => {
   axios.get(newspaper.address)
-      .then(response => {
-          const html = response.data
-          const $ = cheerio.load(html)
-     woolTerms.forEach((term1) => {
-       $(`a:contains(${term1})`, html).each(function () {
+  .then(response => {
+    const html = response.data
+    const $ = cheerio.load(html)
+    woolTerms.forEach((term1) => {
+      $(`a:contains(${term1})`, html).each(function () {
         
         const anchor = $(this);
         const headLine = anchor.text();
@@ -76,29 +73,32 @@ newspapers.forEach(newspaper => {
         const desc = anchor.next('td').text();
          
          
-         if(!duplicatearticles.includes(headLine)){
+        if(!duplicatearticles.includes(headLine)){
           
            articles.push({
-               headLine,
-               desc,
-               source: newspaper.name,
-               url: newspaper.base + url,
-           })
-           duplicatearticles.push(headLine) 
-         }
-          })
+             headLine,
+             desc,
+             source: newspaper.name,
+             url: newspaper.base + url,
+            })
+            duplicatearticles.push(headLine) 
+          }
         })
       })
-})
-
-
-
-
-app.get("/vadapav", (req, res) => {
-res.json(articles)
-});
-
-// checking port on local server
-app.listen(PORT, () => {
-console.log(`listening on ${PORT}`);
-});
+    })
+  })
+  
+  
+  
+  
+  app.get("/", (req, res) => {
+    res.json("welcome to climate new change");
+  });
+  app.get("/vadapav", (req, res) => {
+    res.json(articles)
+  });
+  
+  // checking port on local server
+  app.listen(PORT, () => {
+    console.log(`listening on ${PORT}`);
+  });
